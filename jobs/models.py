@@ -22,10 +22,27 @@ class Job(models.Model):
         return self.title
 
 class UserProfile(models.Model):
+    ROLE_CHOICES = [
+        ('admin', 'Admin'),
+        ('applicant', 'Job Applicant'),
+    ]
+    
     user = models.OneToOneField(User, on_delete=models.CASCADE)
+    role = models.CharField(max_length=10, choices=ROLE_CHOICES, default='applicant')  # Role selection
+    full_name = models.CharField(max_length=100, null=True, blank=True)
+    bio = models.TextField(max_length=500, null=True, blank=True)
     resume = models.FileField(upload_to='resumes/', null=True, blank=True)
     linkedin = models.URLField(null=True, blank=True)
-    profile_picture = models.ImageField(upload_to='profile_pics/', null=True, blank=True)  # New field for profile picture
+    github = models.URLField(null=True, blank=True)
+    website = models.URLField(null=True, blank=True)
+    phone_number = models.CharField(max_length=15, null=True, blank=True)
+    location = models.CharField(max_length=100, null=True, blank=True)
+    skills = models.TextField(null=True, blank=True)
+    experience = models.TextField(null=True, blank=True)
+    education = models.TextField(null=True, blank=True)
+    profile_picture = models.ImageField(upload_to='profile_pics/', null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return self.user.username
+        return f"{self.user.username} ({self.role})"
