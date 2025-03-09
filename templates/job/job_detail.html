@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header">
+            <h2>{{ job.title }}</h2>
+            <small class="text-muted">Posted on: {{ job.posted_at }}</small>
+        </div>
+        <div class="card-body">
+            <h5 class="card-title">{{ job.company }}</h5>
+            <p class="card-text"><strong>Location:</strong> {{ job.location }}</p>
+            <p class="card-text"><strong>Job Type:</strong> {{ job.get_job_type_display }}</p>
+            {% if job.salary %}
+            <p class="card-text"><strong>Salary:</strong> ${{ job.salary }}</p>
+            {% endif %}
+            {% if job.logo %}
+            <img src="{{ job.logo.url }}" alt="Company Logo" class="img-fluid" style="max-width: 150px;">
+            {% endif %}
+            <hr>
+            <p class="card-text">{{ job.description }}</p>
+        </div>
+    </div>
+    <a href="{% url 'job_landing_page' %}" class="btn btn-primary mt-3">Back to Jobs</a>
+</div>
+{% endblock %}

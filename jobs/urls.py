@@ -12,6 +12,10 @@ urlpatterns = [
     path('dashboard/', dashboard, name='dashboard'),
     path('admin-dashboard/', dashboard, name='admin_dashboard'),
     path('applicant-dashboard/', dashboard, name='applicant_dashboard'),
+    path('create_job_advertisement/', create_job_advertisement, name='create_job_advertisement'),
+    path('job/<int:job_id>/', job_detail, name='job_detail'),  # Make sure this is present
+
+
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

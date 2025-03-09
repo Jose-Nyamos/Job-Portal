@@ -81,8 +81,9 @@
                             <p class="card-text">{{ job.company }} - {{ job.location }}</p>
                             <p class="card-text job-description">{{ job.description }}</p>
                             <p class="text-muted mt-2">Posted on {{ job.posted_at|date:"F d, Y" }}</p>
-                            <a href="#" class="btn btn-primary mt-auto view-details" data-job-id="{{ job.id }}">View Details</a>
-                        </div>
+                            <a href="{% url 'job_detail' job.id %}" class="btn btn-primary mt-auto view-details" data-job-id="{{ job.id }}">View Details</a>
+
+                            </div>
                     </div>
                 </div>
                 {% empty %}
@@ -105,17 +106,11 @@
                 button.addEventListener('click', function(e) {
                     e.preventDefault();
                     const jobId = this.getAttribute('data-job-id');
-                    alert(`You clicked on job with ID: ${jobId}. Implement your view details logic here.`);
-                });
-            });
-
-            const jobCards = document.querySelectorAll('.job-card');
-            jobCards.forEach(card => {
-                card.addEventListener('mouseenter', function() {
-                    this.style.backgroundColor = '#f8f9fa';
-                });
-                card.addEventListener('mouseleave', function() {
-                    this.style.backgroundColor = '';
+                    if (jobId) {
+                        window.location.href = this.href;
+                    } else {
+                        alert("Invalid job ID.");
+                    }
                 });
             });
         });

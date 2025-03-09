@@ -2,11 +2,13 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import LogoutView
-from .forms import UserRegistrationForm, UserProfileForm, UserLoginForm
+from .forms import *
 from django.http import HttpResponse
 from django.contrib import messages
 from .models import *
 import logging
+from django.shortcuts import render, get_object_or_404
+
 
 logger = logging.getLogger(__name__)
 
@@ -120,3 +122,27 @@ def user_logout(request):
 def job_landing_page(request):
     jobs = Job.objects.all().order_by('-posted_at')[:5]  # Show latest 5 jobs
     return render(request, 'job/landing_page.html', {'jobs': jobs})
+
+
+# @login_required
+def create_job_advertisement(request):
+    if request.method == 'POST':
+        form = JobForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            return redirect('create_job_advertisement')  # Redirect to a success page or list of jobs
+    else:
+        form = JobForm()
+        
+     # Fetch all jobs from the database
+    jobs = Job.objects.all().order_by('-posted_at')  # Sort by latest jobs first
+
+    return render(request, 'user/create_job_advertisement.html', {'form': form})
+
+def job_detail(request, job_id):
+    job = get_object_or_404(Job, id=job_id)
+    if job:
+        print(f"You clicked on job with ID: {job.id}")  # Debugging
+    return render(request, 'job/job_detail.html', {'job': job})
+
+

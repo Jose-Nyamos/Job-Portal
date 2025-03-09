@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
-from .models import UserProfile
+from .models import *
 import re
 
 from django import forms
@@ -47,3 +47,21 @@ class UserLoginForm(AuthenticationForm):
     def confirm_login_allowed(self, user):
         if not user.is_active:
             raise forms.ValidationError("This account is inactive.")
+        
+from django import forms
+from .models import Job
+
+class JobForm(forms.ModelForm):
+    class Meta:
+        model = Job
+        fields = ['title', 'company', 'location', 'description', 'salary', 'job_type', 'logo']
+        widgets = {
+            'title': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter job title'}),
+            'company': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter company name'}),
+            'location': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Enter job location'}),
+            'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 3, 'placeholder': 'Enter job description'}),
+            'salary': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Enter salary in USD'}),
+            'job_type': forms.Select(attrs={'class': 'form-select'}),
+            'logo': forms.ClearableFileInput(attrs={'class': 'form-control'}),
+        }
+
