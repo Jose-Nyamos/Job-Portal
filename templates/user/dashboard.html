@@ -1,84 +1,178 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard</title>
+    <title>{% block title %}Dashboard{% endblock %}</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <style>
+        /* Sidebar styling */
+        .sidebar {
+            width: 250px;
+            height: 100vh;
+            background: #343a40;
+            color: white;
+            position: fixed;
+            padding-top: 20px;
+        }
+
+        .sidebar .nav-link {
+            color: white;
+            display: flex;
+            align-items: center;
+        }
+
+        .sidebar .nav-link:hover {
+            background: #495057;
+            border-radius: 5px;
+        }
+
+        .sidebar .nav-item i {
+            margin-right: 10px;
+        }
+
+        .sidebar .dropdown-menu {
+            background: #343a40;
+            border: none;
+        }
+
+        .sidebar .dropdown-menu .dropdown-item {
+            color: white;
+        }
+
+        .sidebar .dropdown-menu .dropdown-item:hover {
+            background: #495057;
+        }
+
+        .content-area {
+            margin-left: 260px;
+            padding: 30px;
+            width: calc(100% - 260px);
+        }
+
+        .navbar-nav .nav-item .username {
+            color: white;
+            font-weight: bold;
+            margin-right: 15px;
+        }
+
+        .sidebar h4 {
+            font-weight: bold;
+        }
+
+        .nav-item .nav-link {
+            font-size: 1.1rem;
+        }
+
+        .nav-item .dropdown-item {
+            font-size: 1rem;
+        }
+
+        .content-area .card {
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border: none;
+        }
+
+        .content-area .card-header {
+            font-size: 1.25rem;
+            font-weight: bold;
+        }
+
+        .content-area .card-body a {
+            text-decoration: none;
+            color: #007bff;
+        }
+
+        .content-area .card-body a:hover {
+            text-decoration: underline;
+        }
+    </style>
 </head>
+
 <body>
-    <!-- Top bar -->
+
+    <!-- Top Navigation Bar -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container-fluid">
-            <a class="navbar-brand" href="#">Dashboard</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <a class="navbar-brand" href="{% url 'job_landing_page' %}">Home</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'user_profile' %}">Profile</a>
+                        <span class="nav-link username">Welcome, {{ request.user.username }}</span>
                     </li>
                     <li class="nav-item">
-                        <p class="text-center mt-3">
-                            <form method="post" action="{% url 'logout' %}" style="display: inline;">
-                                {% csrf_token %}
-                                <button type="submit" class="btn btn-danger">Logout</button>
-                            </form>
-                        </p>                    </li>
+                        <a class="nav-link" href="{% url 'user_profile' %}">
+                            <i class="fas fa-user"></i> Profile
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <form method="post" action="{% url 'logout' %}" style="display: inline;">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-danger">Logout</button>
+                        </form>
+                    </li>
                 </ul>
             </div>
         </div>
     </nav>
 
-    <!-- Main container for the page layout -->
-    <div class="d-flex" style="height: calc(100vh - 56px);">
-        <!-- Sidebar -->
-        <div class="bg-dark text-white p-3" style="width: 250px;">
-            <h4 class="text-center mb-4">Dashboard</h4>
-            <ul class="nav flex-column">
-                <li class="nav-item">
-                    <a href="{% url 'user_profile' %}" class="nav-link text-white">My Profile</a>
-                </li>
-                <li class="nav-item">
-                    <p class="text-center mt-3">
-                        <form method="post" action="{% url 'logout' %}" style="display: inline;">
-                            {% csrf_token %}
-                            <button type="submit" class="btn btn-danger">Logout</button>
-                        </form>
-                    </p>
-                    </li>
-                {% if request.user.userprofile.role == 'admin' %}
-                    <li class="nav-item">
-                        <a href="{% url 'admin_dashboard' %}" class="nav-link text-white">Admin Dashboard</a>
-                    </li>
-                {% else %}
-                    <li class="nav-item">
-                        <a href="{% url 'applicant_dashboard' %}" class="nav-link text-white">Applicant Dashboard</a>
-                    </li>
-                {% endif %}
-            </ul>
-        </div>
-
-        <!-- Main content -->
-        <div class="flex-grow-1 p-4">
-            <!-- Conditional Dashboard content based on user role -->
-            {% if request.user.userprofile.role == 'admin' %}
-                <div class="alert alert-info text-center">
-                    <h4>Admin Dashboard</h4>
-                    <p>Here you can manage users, job postings, and more.</p>
-                </div>
-            {% else %}
-                <div class="alert alert-success text-center">
-                    <h4>Applicant Dashboard</h4>
-                    <p>Welcome to your applicant dashboard. You can view available job postings and apply for positions.</p>
-                </div>
-            {% endif %}
-        </div>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <h4 class="text-center mb-4">Applicant Dashboard</h4>
+        <ul class="nav flex-column">
+            <li class="nav-item">
+                <a href="{% url 'user_profile' %}" class="nav-link">
+                    <i class="fas fa-user-circle"></i> My Profile
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="{% url 'applicant_dashboard' %}" class="nav-link">
+                    <i class="fas fa-home"></i> Dashboard Overview
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="{% url 'applied_jobs' %}" class="nav-link">
+                    <i class="fas fa-briefcase"></i> View Applied Jobs
+                </a>
+            </li>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="jobDropdown" role="button" data-bs-toggle="dropdown"
+                    aria-expanded="false">
+                    <i class="fas fa-briefcase"></i> Jobs
+                </a>
+                <ul class="dropdown-menu" aria-labelledby="jobDropdown">
+                    <li><a class="dropdown-item" href="#">Available Jobs</a></li>
+                    <li><a class="dropdown-item" href="#">My Applications</a></li>
+                </ul>
+            </li>
+        </ul>
     </div>
 
-    <!-- Bootstrap JS (optional) -->
+    <!-- Main Content -->
+    <div class="content-area">
+        {% block content %}
+        <div class="card">
+            <div class="card-header">
+                Welcome to Your Dashboard!
+            </div>
+            <div class="card-body">
+                <p>Here you can manage your applications, view the jobs you've applied for, and more. Keep track of your job
+                    applications and make sure you stay up to date with new opportunities.</p>
+                <a href="{% url 'applied_jobs' %}" class="btn btn-primary">View My Applied Jobs</a>
+            </div>
+        </div>
+        {% endblock %}
+    </div>
+
+    <!-- Bootstrap and FontAwesome Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>

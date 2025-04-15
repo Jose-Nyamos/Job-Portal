@@ -1,0 +1,78 @@
+<div class="sidebar-menu">
+    <!-- Admin Profile -->
+    <div class="profile-card">
+        <img src="https://via.placeholder.com/60" alt="Profile" class="profile-img">
+        <h6 class="mb-1">{{ request.user.username }}</h6>
+        <p class="text-muted small mb-2">Administrator</p>
+        <a href="{% url 'user_profile' %}" class="btn btn-outline-light btn-sm w-100">
+            <i class="fas fa-user-cog me-1"></i> Profile
+        </a>
+    </div>
+    
+    <!-- Jobs Section -->
+    <ul class="nav flex-column">
+        <li class="nav-item">
+            <a class="nav-link active" data-bs-toggle="collapse" href="#jobsCollapse" role="button">
+                <i class="fas fa-briefcase"></i> Jobs Management
+                <i class="fas fa-angle-down float-end mt-1"></i>
+            </a>
+            <div class="collapse show" id="jobsCollapse">
+                <ul class="nav flex-column ps-4">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'create_job_advertisement' %}">
+                            <i class="fas fa-plus-circle"></i> Add New Job
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'job_list' %}">
+                            <i class="fas fa-list-ul"></i> Job Listings
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </li>
+        
+        <!-- Applicants Section -->
+        <li class="nav-item">
+            <a class="nav-link" data-bs-toggle="collapse" href="#applicationsCollapse">
+                <i class="fas fa-file-alt"></i> Applications
+                <i class="fas fa-angle-down float-end mt-1"></i>
+            </a>
+            <div class="collapse" id="applicationsCollapse">
+                <ul class="nav flex-column ps-4">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'review_applications' %}">
+                            <i class="fas fa-search"></i> Review Applications
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">
+                            <i class="fas fa-check-double"></i> Approved
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">
+                            <i class="fas fa-ban"></i> Rejected
+                        </a>
+                    </li>
+              
+                </ul>
+            </div>
+        </li>
+        
+        
+        <!-- Settings Section -->
+        <li class="nav-item">
+            <a class="nav-link" href="#">
+                <i class="fas fa-cog"></i> Settings
+            </a>
+        </li>
+    </ul>
+    
+    <!-- Logout -->
+    <div class="position-absolute bottom-0 start-0 end-0 p-3">
+        <a class="btn btn-danger w-100" href="{% url 'logout' %}">
+            <i class="fas fa-sign-out-alt"></i> Logout
+        </a>
+    </div>
+</div>

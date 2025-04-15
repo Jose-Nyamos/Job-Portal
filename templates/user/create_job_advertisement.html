@@ -1,115 +1,120 @@
-{% extends 'base.html' %}
+{% extends 'user/admin-dashboard.html' %}
 
-{% block content %}
-<div class="container mt-4">
+{% block admin_content %}
+<div class="container-fluid">
     <!-- Job Posting Form -->
-    <h2 class="text-center mb-4">Create Job Advertisement</h2>
-    
-    <div class="card shadow p-4">
-        <form method="POST" enctype="multipart/form-data">
-            {% csrf_token %}
-            <div class="row">
-                <!-- Left Column -->
-                <div class="col-md-4">
-                    <div class="mb-3">
-                        <label for="id_title" class="form-label fw-bold">Job Title</label>
-                        {{ form.title }}
+    <div class="card shadow mb-4">
+        <div class="card-header py-3 d-flex justify-content-between align-items-center">
+            <h5 class="m-0 font-weight-bold text-primary">Create Job Advertisement</h5>
+        </div>
+        <div class="card-body">
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="row">
+                    <!-- Left Column -->
+                    <div class="col-md-6">
+                        <div class="form-group mb-4">
+                            <label for="id_title" class="form-label fw-bold">Job Title</label>
+                            {{ form.title }}
+                        </div>
+                        <div class="form-group mb-4">
+                            <label for="id_company" class="form-label fw-bold">Company</label>
+                            {{ form.company }}
+                        </div>
+                        <div class="form-group mb-4">
+                            <label for="id_location" class="form-label fw-bold">Location</label>
+                            {{ form.location }}
+                        </div>
+                        <div class="form-group mb-4">
+                            <label for="id_salary" class="form-label fw-bold">Salary ($)</label>
+                            {{ form.salary }}
+                        </div>
                     </div>
-                    <div class="mb-3">
-                        <label for="id_company" class="form-label fw-bold">Company</label>
-                        {{ form.company }}
-                    </div>
-                    <div class="mb-3">
-                        <label for="id_location" class="form-label fw-bold">Location</label>
-                        {{ form.location }}
+
+                    <!-- Right Column -->
+                    <div class="col-md-6">
+                        <div class="form-group mb-4">
+                            <label for="id_job_type" class="form-label fw-bold">Job Type</label>
+                            {{ form.job_type }}
+                        </div>
+                        <div class="form-group mb-4">
+                            <label for="id_posted_at" class="form-label fw-bold">Posted Date</label>
+                            <input type="text" class="form-control bg-light" value="{% now 'Y-m-d H:i' %}" disabled>
+                        </div>
+                        <div class="form-group mb-4">
+                            <label for="id_logo" class="form-label fw-bold">Company Logo</label>
+                            <div class="custom-file">
+                                {{ form.logo }}
+                                <label class="custom-file-label" for="id_logo">Choose file</label>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                <!-- Middle Column -->
-                <div class="col-md-4">
-                    <div class="mb-3">
-                        <label for="id_salary" class="form-label fw-bold">Salary ($)</label>
-                        {{ form.salary }}
-                    </div>
-                    <div class="mb-3">
-                        <label for="id_job_type" class="form-label fw-bold">Job Type</label>
-                        {{ form.job_type }}
-                    </div>
-                    <div class="mb-3">
-                        <label for="id_posted_at" class="form-label fw-bold">Posted Date</label>
-                        <input type="text" class="form-control bg-light" value="{% now 'Y-m-d H:i' %}" disabled>
-                    </div>
+                <!-- Description Field -->
+                <div class="form-group mb-4">
+                    <label for="id_description" class="form-label fw-bold">Job Description</label>
+                    {{ form.description }}
                 </div>
 
-                <!-- Right Column -->
-                <div class="col-md-4">
-                    <div class="mb-3">
-                        <label for="id_logo" class="form-label fw-bold">Company Logo</label>
-                        {{ form.logo }}
-                    </div>
-                    <div class="mb-3">
-                        <label for="id_description" class="form-label fw-bold">Job Description</label>
-                        {{ form.description }}
-                    </div>
+                <!-- Submit Button -->
+                <div class="text-center mt-4">
+                    <button type="submit" class="btn btn-primary px-5 py-2">
+                        <i class="fas fa-save mr-2"></i> Post Job
+                    </button>
                 </div>
-            </div>
-
-            <!-- Submit Button -->
-            <div class="text-center mt-3">
-                <button type="submit" class="btn btn-primary px-5 py-2">Post Job</button>
-            </div>
-        </form>
+            </form>
+        </div>
     </div>
 
     <!-- Job Listings Table -->
-    <h2 class="mt-5 text-center">Job Listings</h2>
-    <table id="jobTable" class="table table-striped table-bordered">
-        <thead class="table-dark">
-            <tr>
-                <th>Title</th>
-                <th>Company</th>
-                <th>Location</th>
-                <th>Job Type</th>
-                <th>Salary</th>
-                <th>Posted At</th>
-                <th>Logo</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for job in jobs %}
-            <tr>
-                <td>{{ job.title }}</td>
-                <td>{{ job.company }}</td>
-                <td>{{ job.location }}</td>
-                <td>{{ job.job_type }}</td>
-                <td>${{ job.salary|default:"-" }}</td>
-                <td>{{ job.posted_at|date:"Y-m-d H:i" }}</td>
-                <td>
-                    {% if job.logo %}
-                        <img src="{{ job.logo.url }}" alt="Logo" width="50">
-                    {% else %}
-                        No Logo
-                    {% endif %}
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+  
 </div>
 
-<!-- Include jQuery and DataTables for Sorting -->
-<link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
+<!-- Include jQuery and DataTables -->
+<link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap4.min.css">
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap4.min.js"></script>
 
+<!-- BS custom file input -->
 <script>
     $(document).ready(function() {
+        // Initialize DataTable
         $('#jobTable').DataTable({
-            "order": [[5, "desc"]], // Sort by Posted At (Newest First)
-            "paging": true,
-            "searching": true
+            "order": [[5, "desc"]],
+            "responsive": true,
+            "columnDefs": [
+                { "responsivePriority": 1, "targets": 0 },
+                { "responsivePriority": 2, "targets": -1 }
+            ]
+        });
+
+        // BS custom file input
+        $('.custom-file input').change(function(e) {
+            var fileName = e.target.files[0].name;
+            $(this).next('.custom-file-label').html(fileName);
         });
     });
 </script>
 
+<style>
+    .form-control, .custom-select {
+        border-radius: 0.35rem;
+        padding: 0.75rem 1rem;
+    }
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+    .card {
+        border: none;
+        border-radius: 0.35rem;
+    }
+    .table th {
+        font-weight: 600;
+    }
+    .custom-file-label::after {
+        content: "Browse";
+    }
+</style>
 {% endblock %}

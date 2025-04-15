@@ -48,8 +48,6 @@ class UserLoginForm(AuthenticationForm):
         if not user.is_active:
             raise forms.ValidationError("This account is inactive.")
         
-from django import forms
-from .models import Job
 
 class JobForm(forms.ModelForm):
     class Meta:
@@ -63,5 +61,13 @@ class JobForm(forms.ModelForm):
             'salary': forms.NumberInput(attrs={'class': 'form-control', 'placeholder': 'Enter salary in USD'}),
             'job_type': forms.Select(attrs={'class': 'form-select'}),
             'logo': forms.ClearableFileInput(attrs={'class': 'form-control'}),
+        }
+        
+class JobApplicationForm(forms.ModelForm):
+    class Meta:
+        model = JobApplication
+        fields = ['cover_letter', 'resume']
+        widgets = {
+            'cover_letter': forms.ClearableFileInput(attrs={'multiple': False}),
         }
 

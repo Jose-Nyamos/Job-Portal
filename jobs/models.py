@@ -23,8 +23,8 @@ class Job(models.Model):
 
 class UserProfile(models.Model):
     ROLE_CHOICES = [
-        ('admin', 'Admin'),
-        ('applicant', 'Job Applicant'),
+        ('admin', 'admin'),
+        ('applicant', 'applicant'),
     ]
     
     user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -46,3 +46,21 @@ class UserProfile(models.Model):
 
     def __str__(self):
         return f"{self.user.username} ({self.role})"
+    
+class JobApplication(models.Model):
+    STATUS_CHOICES = [
+        ('pending', 'Pending'),
+        ('approved', 'Approved'),
+        ('rejected', 'Rejected'),
+    ]
+
+    job = models.ForeignKey('Job', on_delete=models.CASCADE)
+    applicant = models.ForeignKey(User, on_delete=models.CASCADE)  # Reference to user
+    resume = models.FileField(upload_to='resumes/')
+    cover_letter = models.FileField(upload_to='cover_letters/', null=True, blank=True, help_text="Upload your cover letter in PDF format.")
+    applied_at = models.DateTimeField(auto_now_add=True)
+    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='pending')
+    approved_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='approved_applications')
+
+    def __str__(self):
+        return f"{self.applicant.username} - {self.job.title} ({self.status})"
